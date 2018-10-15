@@ -38,8 +38,7 @@ class APIError(web.HTTPError):
 
 def error_middleware():
     # noinspection PyUnusedLocal
-    @asyncio.coroutine
-    def _middleware(app, handler):
+    async def _middleware(app, handler):
 
         def _write_exception_json(status_code=500, exc_info=None):
             if exc_info is None:
@@ -58,10 +57,9 @@ def error_middleware():
                                 body=json.to_json({'error': message}).encode('utf-8'),
                                 content_type='application/json')
 
-        @asyncio.coroutine
-        def _middleware_handler(request):
+        async def _middleware_handler(request):
             try:
-                response = yield from handler(request)
+                response = await handler(request)
                 return response
             except APIError as ex:
                 return _write_error_json(ex.status_code, ex.message or ex.reason)
