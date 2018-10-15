@@ -49,16 +49,17 @@ if __name__ == '__main__':
             config.bind_port = bind_port
 
     # init logging
-    logger = tattle.logging.init_logger(tattle.logging.DEBUG)
+    logger = tattle.logging.init_logger()
 
     # initialize cluster
     cluster = tattle.Cluster(config)
 
     # start API server
-    tattle.start_server(tattle.APIServer(cluster), config.api_port, config.api_address)
+    ioloop = asyncio.get_event_loop()
+    tattle.start_server(tattle.APIServer(cluster, ioloop), config.api_port, config.api_address)
 
     # start cluster
     asyncio.ensure_future(cluster.start())
 
     # lets go!
-    asyncio.get_event_loop().run_forever()
+    ioloop.run_forever()
