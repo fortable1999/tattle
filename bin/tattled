@@ -16,6 +16,8 @@ def _parse_arguments():
                         help="node address")
     parser.add_argument("-b", "--bind", type=str,
                         help="bind address")
+    parser.add_argument("-s", "--server", type=str,
+                        help="api server bind address")
     parser.add_argument("-v", "--verbose", action="store_true",
                         help="verbose output")
 
@@ -36,6 +38,7 @@ if __name__ == '__main__':
 
     if args.address is not None:
         node_address, node_port = tattle.network.parse_address(args.address)
+        print(node_address, node_port)
         if node_address is not None:
             config.node_address = node_address
         if node_port is not None:
@@ -47,6 +50,13 @@ if __name__ == '__main__':
             config.bind_address = bind_address
         if bind_port is not None:
             config.bind_port = bind_port
+
+    if args.server is not None:
+        api_address, api_port = tattle.network.parse_address(args.server)
+        if api_address is not None:
+            config.api_address = api_address
+        if api_port is not None:
+            config.api_port = api_port
 
     # init logging
     logger = tattle.logging.init_logger()
